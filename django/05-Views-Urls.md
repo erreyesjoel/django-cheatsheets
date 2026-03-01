@@ -62,7 +62,8 @@ def logout_view(request):
     return redirect('login_template')
 ```
 
-2. Archivo urls.py
+## ¿Qué es `urls.py`?
+
 - Es el archivo donde "definimos y unimos" la url con la def del views.py
 - Importamos las views, views de las apps que tengamos, las mismas urls de otras apps
 - Se definen las rutas con path()
