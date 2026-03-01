@@ -78,4 +78,4 @@ Running migrations:
 ```
 - En el schema public, en pgadmin, deberiamos ver esas tablas creadas!
 - Por defecto django usará siempre el schema public
-
+![alt text](<resultado al crear el server.png>)
