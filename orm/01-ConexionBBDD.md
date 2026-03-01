@@ -39,7 +39,7 @@ pip install python-dotenv
 ```
 3. Meterlo al requeriments.txt para actualizar dependencias
 ```shell
-...existing code...
+pip freeze > requirements.txt
 ```
 4. Cargar las variables en settings.py
 ```python
