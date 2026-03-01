@@ -60,6 +60,7 @@ def admin_dashboard_template(request):
 def logout_view(request):
     logout(request)
     return redirect('login_template')
+```
 
 2. Archivo urls.py
 - Es el archivo donde "definimos y unimos" la url con la def del views.py
