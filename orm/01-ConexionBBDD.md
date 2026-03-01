@@ -1,3 +1,28 @@
+# Seguridad: SECRET_KEY en Django
+
+## ¿Por qué es importante la SECRET_KEY en Django?
+
+La `SECRET_KEY` es fundamental en cualquier proyecto Django, sin importar la base de datos utilizada (PostgreSQL, MySQL, SQLite, etc). Esta clave:
+
+- Se utiliza para firmar cookies, tokens y datos sensibles generados por Django.
+- Protege contra ataques como falsificación de solicitudes (CSRF), manipulación de sesiones y otros riesgos de seguridad.
+- Si un atacante obtiene tu `SECRET_KEY`, podría generar sesiones válidas, modificar cookies o descifrar información protegida.
+
+**Nunca compartas ni subas tu `SECRET_KEY` a repositorios públicos.**
+
+Siempre almacénala en el archivo `.env` o en variables de entorno seguras, y nunca directamente en el código fuente.
+
+### ¿Cómo generar y guardar la SECRET_KEY?
+
+1. Genera una nueva clave secreta:
+    ```bash
+    python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+    ```
+2. Añádela a tu archivo `.env` (en la misma carpeta que `settings.py` o `manage.py`):
+    ```env
+    SECRET_KEY=tu_clave_generada
+    ```
+
 # Conexion a base de datos postgres en Django
 1. Crear un .env, en donde esta el settings.py
 ```.env
@@ -14,9 +39,7 @@ pip install python-dotenv
 ```
 3. Meterlo al requeriments.txt para actualizar dependencias
 ```shell
-(env) joel-erreyes:~/docsjoel/proyectos personales/GameHaven/backend$ ls
-backend_django  env  requirements.txt
-(env) joel-erreyes:~/docsjoel/proyectos personales/GameHaven/backend$ pip freeze > requirements.txt
+...existing code...
 ```
 4. Cargar las variables en settings.py
 ```python
@@ -78,3 +101,114 @@ Running migrations:
 ```
 - En el schema public, en pgadmin, deberiamos ver esas tablas creadas!
 - Por defecto django usará siempre el schema public
+
+# Conexión a base de datos MySQL/MariaDB en Django
+1. Activar el entorno virtual
+Si no está activado:
+```bash
+source env/bin/activate
+```
+2. Instalar dependencias necesarias
+- Librería para gestionar variables de entorno:
+```bash
+pip install django-environ
+```
+- Driver para conectar Django con MySQL/MariaDB:
+```bash
+pip install pymysql
+```
+- Actualizar dependencias:
+```bash
+pip freeze > requirements.txt
+```
+3. Crear archivo .env
+- Debe estar en la misma carpeta donde está manage.py o donde cargues las variables.
+- Ejemplo:
+- .env para Django + MySQL/MariaDB
+```env
+SECRET_KEY=tu_clave_generada
+DEBUG=True
+```
+- settings.py
+```python
+# Configuración de la base de datos
+DB_ENGINE=django.db.backends.mysql
+DB_NAME=easytripdb
+DB_USER=easytripuser
+DB_PASSWORD=easytrip123
+DB_HOST=127.0.0.1
+DB_PORT=3310
+```
+4. Configurar settings.py para usar .env y PyMySQL
+```python
+from pathlib import Path
+import environ
+import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Inicializar django-environ
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Seguridad
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
+
+ALLOWED_HOSTS = []
+
+# Base de datos
+DATABASES = {
+    'default': {
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+    }
+}
+```
+5. Generar una nueva SECRET_KEY (opcional) si no la tenemos
+...existing code...
+6. Crear o actualizar requirements.txt
+```bash
+pip freeze > requirements.txt
+```
+- Para instalar dependencias en otro entorno:
+```bash
+pip install -r requirements.txt
+```
+7. Probar la conexión ejecutando migraciones
+- El .env debe estar en la misma ubicación que manage.py.
+```bash
+python manage.py migrate
+```
+- Salida esperada:
+```bash
+Applying contenttypes.0001_initial... OK
+Applying auth.0001_initial... OK
+Applying admin.0001_initial... OK
+...
+Applying sessions.0001_initial... OK
+```
+8. Nota importante si usas Docker
+- Asegúrate de que los contenedores estén levantados:
+```bash
+docker compose up -d
+```
+O
+```bash
+docker-compose up -d
+```
+## Resumen rápido
+- .env → credenciales y configuración segura
+- django-environ → cargar variables
+- PyMySQL → driver para MySQL/MariaDB
+- migrate → prueba de conexión
+- Docker debe estar levantado si la DB está en contenedor
