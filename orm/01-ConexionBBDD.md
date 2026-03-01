@@ -176,7 +176,14 @@ DATABASES = {
 }
 ```
 5. Generar una nueva SECRET_KEY (opcional) si no la tenemos
-...existing code...
+Si necesitas una nueva clave secreta, ejecuta:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+Luego, cópiala y pégala en tu archivo `.env` como:
+```env
+SECRET_KEY=tu_clave_generada
+```
 6. Crear o actualizar requirements.txt
 ```bash
 pip freeze > requirements.txt
