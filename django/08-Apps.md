@@ -63,6 +63,25 @@ urlpatterns = [
     path('juegos/', include('juegos.urls')), # incluimos las urls de la app juegos
 ]
 ```
+
+# IMPORTANTE
+- Hay que registrar la app creada en settings.py
+- Ejemplo -> settings.py
+```python
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'usuarios',  # nuestra app de usuarios (python manage.py startapp usuarios)
+    'plataformas', # mi app startapp plataformas (python manage.py startapp plataformas)
+]
+```
+
 ## Resumen rápido
 - Una app es un módulo independiente dentro de un proyecto Django.
 - Se crea con startapp.
