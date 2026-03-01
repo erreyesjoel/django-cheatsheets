@@ -65,11 +65,12 @@ DATABASES = {
 ```shell
 pip install psycopg2-binary
 ```
+- Actualizar dependencias
 ```shell
 pip freeze > requirements.txt
+```
 
 6. python manage.py migrate
-
 - salida terminal
 
 ```shell
